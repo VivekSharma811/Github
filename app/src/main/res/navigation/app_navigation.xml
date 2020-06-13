@@ -6,7 +6,7 @@
     <fragment
         android:id="@+id/listFragment"
         android:name="com.lightstone.github.view.fragment.ListFragment"
-        android:label="ListFragment" >
+        android:label="Users" >
         <action
             android:id="@+id/actionListUser"
             app:destination="@id/userFragment" />
@@ -14,5 +14,10 @@
     <fragment
         android:id="@+id/userFragment"
         android:name="com.lightstone.github.view.fragment.UserFragment"
-        android:label="UserFragment" />
+        android:label="Repositories" >
+        <argument
+            android:name="userUuid"
+            android:defaultValue="0"
+            app:argType="integer"></argument>
+    </fragment>
 </navigation>

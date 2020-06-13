@@ -1,6 +1,7 @@
 package com.lightstone.github.model.network
 
 import com.lightstone.github.model.network.interceptor.ConnectivityInterceptor
+import com.lightstone.github.model.response.GithubRepository
 import com.lightstone.github.model.response.UserItem
 import io.reactivex.Single
 import okhttp3.Interceptor
@@ -9,6 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface GithubApiService {
 
@@ -33,5 +35,10 @@ interface GithubApiService {
 
     @GET("users")
     fun getUser() : Single<List<UserItem>>
+
+    @GET("users/{username}/repos")
+    fun getRepository(
+        @Path("username") username : String
+    ) : Single<List<GithubRepository>>
 
 }

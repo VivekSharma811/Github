@@ -3,7 +3,6 @@ package com.lightstone.github.model.repository
 import androidx.lifecycle.LiveData
 import com.lightstone.github.model.db.dao.UserDao
 import com.lightstone.github.model.network.datasource.UserDataSource
-import com.lightstone.github.model.network.datasource.UserDataSourceImpl
 import com.lightstone.github.model.response.UserItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

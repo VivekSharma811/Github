@@ -9,6 +9,7 @@ import com.lightstone.github.model.network.interceptor.ConnectivityInterceptor
 import com.lightstone.github.model.network.interceptor.ConnectivityInterceptorImpl
 import com.lightstone.github.model.repository.UserRepository
 import com.lightstone.github.model.repository.UserRepositoryImpl
+import com.lightstone.github.view.fragment.UserFragment
 import com.lightstone.github.viewmodel.viewmodelfactory.ListViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
