@@ -8,15 +8,22 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 
 import com.lightstone.github.R
 import com.lightstone.github.databinding.FragmentUserBinding
 import com.lightstone.github.model.db.UserDatabase
 import com.lightstone.github.model.db.dao.UserDao
 import com.lightstone.github.model.network.GithubApiService
+import com.lightstone.github.model.network.datasource.GithubRepositoryDataSource
+import com.lightstone.github.model.network.datasource.GithubRepositoryDataSourceImpl
 import com.lightstone.github.model.network.interceptor.ConnectivityInterceptor
 import com.lightstone.github.model.network.interceptor.ConnectivityInterceptorImpl
 import com.lightstone.github.model.response.GithubRepository
+import com.lightstone.github.util.getProgressDrawable
+import com.lightstone.github.util.loadImage
+import com.lightstone.github.viewmodel.viewmodelfactory.UserViewModelFactory
+import com.lightstone.github.viewmodel.viewmodels.UserViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -26,12 +33,15 @@ import kotlinx.coroutines.launch
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
+import org.kodein.di.generic.instance
 
 class UserFragment : ScopedFragment(), KodeinAware {
 
     override val kodein by closestKodein()
 
-    private lateinit var githubApiService: GithubApiService
+    private val viewModelFactory : UserViewModelFactory by instance()
+
+    private lateinit var viewModel : UserViewModel
 
     private var userUuid = 0
 
@@ -43,48 +53,60 @@ class UserFragment : ScopedFragment(), KodeinAware {
     ): View? {
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_user, container, false)
         return dataBinding.root
-        //return inflater.inflate(R.layout.fragment_user, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(UserViewModel::class.java)
+
         arguments?.let {
             userUuid = UserFragmentArgs.fromBundle(it).userUuid
         }
-        showImage()
+
+        bindUi()
     }
 
     private fun bindUi() = launch {
-        dataBinding.user?.let {
-            context?.let {
-                githubApiService = GithubApiService.invoke(ConnectivityInterceptorImpl(it))
-            }
-            CompositeDisposable().add(
-                githubApiService.getRepository(it.login)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeWith(object : DisposableSingleObserver<List<GithubRepository>>() {
-                        override fun onSuccess(t: List<GithubRepository>) {
-                            temptext.text = t.toString()
-                        }
+        viewModel.getUser(userUuid)
 
-                        override fun onError(e: Throwable) {
-                            temptext.text = e.localizedMessage
-                        }
-
-                    })
-            )
-        }
-    }
-
-    private fun showImage() = launch {
-        val user = UserDatabase(requireContext()!!.applicationContext).userDao().getUser(userUuid)
-//        val user = userDao.getUser(userUuid)
-        user.observe(viewLifecycleOwner, Observer {
-            dataBinding.user = it
+        viewModel.avatar.observe(viewLifecycleOwner, Observer {avatar ->
+            context?.let { imageView.loadImage(avatar, getProgressDrawable(it)) }
         })
-        bindUi()
+
+        viewModel.username.observe(viewLifecycleOwner, Observer {
+            textView.text = it
+        })
+
+        viewModel.repoList.observe(viewLifecycleOwner, Observer {
+            temptext.text = it.toString()
+        })
     }
+
+//    private fun bindUi() = launch {
+//        dataBinding.user?.let {
+//            context?.let {
+//                githubApiService = GithubApiService.invoke(ConnectivityInterceptorImpl(it))
+//            }
+//
+//            val datasource = GithubRepositoryDataSourceImpl(githubApiService)
+//
+//            datasource.repoList.observe(viewLifecycleOwner, Observer {
+//                temptext.text = it.toString()
+//            })
+//
+//            datasource.fetchRepository()
+//
+//        }
+//    }
+//
+//    private fun showImage() = launch {
+//        val user = UserDatabase(requireContext()!!.applicationContext).userDao().getUser(userUuid)
+//        user.observe(viewLifecycleOwner, Observer {
+//            dataBinding.user = it
+//        })
+//        bindUi()
+//    }
 
 }

@@ -11,7 +11,7 @@ import com.lightstone.github.model.response.UserItem
 interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(userList: List<UserItem>)
+    fun insert(vararg user: UserItem)
 
     @Query("SELECT * FROM github_user")
     fun getAllUsers() : LiveData<List<UserItem>>

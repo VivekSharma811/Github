@@ -7,4 +7,5 @@ interface UserRepository {
 
     suspend fun getUserList() : LiveData<List<UserItem>>
 
+    suspend fun getUser(userId : Int) : LiveData<UserItem>
 }

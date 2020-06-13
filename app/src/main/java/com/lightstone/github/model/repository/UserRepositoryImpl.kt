@@ -27,9 +27,15 @@ class UserRepositoryImpl(
         }
     }
 
+    override suspend fun getUser(userId: Int): LiveData<UserItem> {
+        return withContext(Dispatchers.IO) {
+            return@withContext userDao.getUser(userId)
+        }
+    }
+
     private fun persistFetchedData(usersList : List<UserItem>) {
         GlobalScope.launch(Dispatchers.IO) {
-            userDao.insert(usersList)
+            userDao.insert(*usersList.toTypedArray())
         }
     }
 
