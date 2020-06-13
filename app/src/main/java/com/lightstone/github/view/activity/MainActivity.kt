@@ -1,7 +1,8 @@
-package com.lightstone.github
+package com.lightstone.github.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.lightstone.github.R
 
 class MainActivity : AppCompatActivity() {
 
