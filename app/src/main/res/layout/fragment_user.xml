@@ -38,6 +38,7 @@
         />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constrainedHeight="true"
@@ -48,12 +49,12 @@
         android:background="@color/colorPrimaryDark"
         >
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/temptext"
-            android:text="@string/app_name"
-            />
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:id="@+id/temptext"-->
+<!--            android:text="@string/app_name"-->
+<!--            />-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/repoList"

@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.lightstone.github.R
 import com.lightstone.github.databinding.FragmentUserBinding
@@ -22,13 +23,16 @@ import com.lightstone.github.model.network.interceptor.ConnectivityInterceptorIm
 import com.lightstone.github.model.response.GithubRepository
 import com.lightstone.github.util.getProgressDrawable
 import com.lightstone.github.util.loadImage
+import com.lightstone.github.view.adapter.RepoListAdapter
 import com.lightstone.github.viewmodel.viewmodelfactory.UserViewModelFactory
 import com.lightstone.github.viewmodel.viewmodels.UserViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_user.*
+import kotlinx.android.synthetic.main.fragment_user.refreshLayout
 import kotlinx.coroutines.launch
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -40,6 +44,7 @@ class UserFragment : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
 
     private val viewModelFactory : UserViewModelFactory by instance()
+    private val repoListAdapter = RepoListAdapter(arrayListOf())
 
     private lateinit var viewModel : UserViewModel
 
@@ -65,6 +70,16 @@ class UserFragment : ScopedFragment(), KodeinAware {
             userUuid = UserFragmentArgs.fromBundle(it).userUuid
         }
 
+        repoList.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = repoListAdapter
+        }
+
+        refreshLayout.setOnRefreshListener {
+            bindUi()
+            refreshLayout.isRefreshing = false
+        }
+
         bindUi()
     }
 
@@ -80,7 +95,10 @@ class UserFragment : ScopedFragment(), KodeinAware {
         })
 
         viewModel.repoList.observe(viewLifecycleOwner, Observer {
-            temptext.text = it.toString()
+            if(it == null) return@Observer
+
+            repoListAdapter.updateUsers(it)
+            //temptext.text = it.toString()
         })
     }
 
