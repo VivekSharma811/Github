@@ -30,6 +30,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.refreshLayout
@@ -63,6 +64,8 @@ class UserFragment : ScopedFragment(), KodeinAware {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        progressBarUser.visibility = View.VISIBLE
+
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(UserViewModel::class.java)
 
@@ -76,6 +79,7 @@ class UserFragment : ScopedFragment(), KodeinAware {
         }
 
         refreshLayout.setOnRefreshListener {
+            progressBarUser.visibility = View.VISIBLE
             bindUi()
             refreshLayout.isRefreshing = false
         }
@@ -98,33 +102,7 @@ class UserFragment : ScopedFragment(), KodeinAware {
             if(it == null) return@Observer
 
             repoListAdapter.updateUsers(it)
-            //temptext.text = it.toString()
+            progressBarUser.visibility = View.GONE
         })
     }
-
-//    private fun bindUi() = launch {
-//        dataBinding.user?.let {
-//            context?.let {
-//                githubApiService = GithubApiService.invoke(ConnectivityInterceptorImpl(it))
-//            }
-//
-//            val datasource = GithubRepositoryDataSourceImpl(githubApiService)
-//
-//            datasource.repoList.observe(viewLifecycleOwner, Observer {
-//                temptext.text = it.toString()
-//            })
-//
-//            datasource.fetchRepository()
-//
-//        }
-//    }
-//
-//    private fun showImage() = launch {
-//        val user = UserDatabase(requireContext()!!.applicationContext).userDao().getUser(userUuid)
-//        user.observe(viewLifecycleOwner, Observer {
-//            dataBinding.user = it
-//        })
-//        bindUi()
-//    }
-
 }

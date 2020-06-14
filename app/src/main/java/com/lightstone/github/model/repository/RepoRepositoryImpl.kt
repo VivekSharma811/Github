@@ -27,11 +27,12 @@ class RepoRepositoryImpl(
         }
     }
 
-    override suspend fun getRepoList(username : String): LiveData<List<GithubRepository>> {
-        return withContext(Dispatchers.IO) {
-            initFetchFromApi(username)
-            return@withContext repoDao.getAllRepos()
-        }
+    override suspend fun getRepoList(username : String) {
+//        return withContext(Dispatchers.IO) {
+//            initFetchFromApi(username)
+//            return@withContext repoDao.getAllRepos()
+//        }
+        initFetchFromApi(username)
     }
 
     private fun persistFetchedData(repoList : List<GithubRepository>) {

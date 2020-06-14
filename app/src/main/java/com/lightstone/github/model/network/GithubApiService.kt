@@ -2,6 +2,7 @@ package com.lightstone.github.model.network
 
 import com.lightstone.github.model.network.interceptor.ConnectivityInterceptor
 import com.lightstone.github.model.response.GithubRepository
+import com.lightstone.github.model.response.RepoDetails
 import com.lightstone.github.model.response.UserItem
 import io.reactivex.Single
 import okhttp3.Interceptor
@@ -40,5 +41,11 @@ interface GithubApiService {
     fun getRepository(
         @Path("username") username : String
     ) : Single<List<GithubRepository>>
+
+    @GET("repos/{username}/{reponame}")
+    fun getRepoDetails(
+        @Path("username") username: String,
+        @Path("reponame") reponame : String
+    ) : Single<RepoDetails>
 
 }

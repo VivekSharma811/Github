@@ -19,5 +19,23 @@
             android:name="userUuid"
             android:defaultValue="0"
             app:argType="integer"></argument>
+        <action
+            android:id="@+id/actionUserRepoDetails"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.lightstone.github.view.fragment.DetailsFragment"
+        android:label="Repository Details" >
+        <argument
+            android:name="username"
+            android:defaultValue="@null"
+            app:nullable="true"
+            app:argType="string"></argument>
+        <argument
+            android:name="reponame"
+            android:defaultValue="@null"
+            app:nullable="true"
+            app:argType="string"></argument>
     </fragment>
 </navigation>

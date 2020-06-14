@@ -53,6 +53,8 @@ class ListFragment : ScopedFragment(), KodeinAware {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        progressBar.visibility = View.VISIBLE
+
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(ListViewModel::class.java)
 
@@ -62,6 +64,7 @@ class ListFragment : ScopedFragment(), KodeinAware {
         }
 
         refreshLayout.setOnRefreshListener {
+            progressBar.visibility = View.VISIBLE
             bindUi()
             refreshLayout.isRefreshing = false
         }
@@ -75,6 +78,7 @@ class ListFragment : ScopedFragment(), KodeinAware {
             if(it == null) return@Observer
 
             userListAdapter.updateUsers(it)
+            progressBar.visibility = View.GONE
             usersList.visibility = View.VISIBLE
         })
     }
