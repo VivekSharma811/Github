@@ -104,5 +104,12 @@ class UserFragment : ScopedFragment(), KodeinAware {
             repoListAdapter.updateUsers(it)
             progressBarUser.visibility = View.GONE
         })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer {
+            if(it) {
+                progressBarUser.visibility = View.GONE
+                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT)
+            }
+        })
     }
 }

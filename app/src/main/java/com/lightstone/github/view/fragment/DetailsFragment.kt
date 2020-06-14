@@ -7,9 +7,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.snackbar.Snackbar
 
 import com.lightstone.github.R
 import com.lightstone.github.databinding.FragmentDetailsBinding
@@ -83,6 +85,13 @@ class DetailsFragment : ScopedFragment(), KodeinAware {
         viewModel.repoDetails.observe(viewLifecycleOwner, Observer {
             progressBarDetails.visibility = View.GONE
             dataBinding.repoDetails = it
+        })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer {
+            if(it) {
+                progressBarDetails.visibility = View.GONE
+                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT)
+            }
         })
     }
 

@@ -19,6 +19,11 @@ class RepoDetailsDataSourceImpl(
     override val repoDetails: LiveData<RepoDetails>
         get() = _repoDetails
 
+    private val _error = MutableLiveData<Boolean>()
+
+    override val error: LiveData<Boolean>
+        get() = _error
+
     override suspend fun fetchRepoDetails(username: String, reponame: String) {
         CompositeDisposable().add(
             githubApiService.getRepoDetails(username, reponame)
@@ -30,7 +35,8 @@ class RepoDetailsDataSourceImpl(
                     }
 
                     override fun onError(e: Throwable) {
-                        Log.e("Error", e.localizedMessage)
+                        Log.e("Error", e.toString())
+                        _error.postValue(true)
                     }
                 })
         )

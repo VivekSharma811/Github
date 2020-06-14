@@ -7,6 +7,8 @@ interface UserDataSource {
 
     val userList : LiveData<List<UserItem>>
 
+    val error : LiveData<Boolean>
+
     suspend fun fetchUser()
 
 }

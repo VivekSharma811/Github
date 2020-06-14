@@ -13,7 +13,13 @@ class UserViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
+    private val _error = MutableLiveData<Boolean>()
+
+    val error : LiveData<Boolean>
+        get() = _error
+
     private val _repoList = MutableLiveData<List<GithubRepository>>()
+
     val repoList : LiveData<List<GithubRepository>>
         get() = _repoList
 
@@ -40,6 +46,9 @@ class UserViewModel(
         }
         repoRepository.repo.observeForever {
             _repoList.postValue(it)
+        }
+        repoRepository.error.observeForever {
+            _error.postValue(it)
         }
     }
 

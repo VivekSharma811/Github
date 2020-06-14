@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -80,6 +81,13 @@ class ListFragment : ScopedFragment(), KodeinAware {
             userListAdapter.updateUsers(it)
             progressBar.visibility = View.GONE
             usersList.visibility = View.VISIBLE
+        })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer {
+            if(it) {
+                progressBar.visibility = View.GONE
+                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT)
+            }
         })
     }
 }

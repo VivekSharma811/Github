@@ -15,6 +15,11 @@ class RepoRepositoryImpl(
     private val repositoryDataSource: GithubRepositoryDataSource
 ) : RepoRepository {
 
+    private val _error = MutableLiveData<Boolean>()
+
+    override val error: LiveData<Boolean>
+        get() = _error
+
     private val _repo = MutableLiveData<List<GithubRepository>>()
 
     override val repo : LiveData<List<GithubRepository>>
@@ -24,6 +29,9 @@ class RepoRepositoryImpl(
         repositoryDataSource.repoList.observeForever {
             _repo.postValue(it)
             //persistFetchedData(it)
+        }
+        repositoryDataSource.error.observeForever {
+            _error.postValue(it)
         }
     }
 

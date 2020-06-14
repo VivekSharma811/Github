@@ -7,6 +7,8 @@ interface GithubRepositoryDataSource {
 
     val repoList : LiveData<List<GithubRepository>>
 
+    val error : LiveData<Boolean>
+
     suspend fun fetchRepository(username : String)
 
 }

@@ -7,6 +7,8 @@ interface RepoDetailsDataSource {
 
     val repoDetails : LiveData<RepoDetails>
 
+    val error : LiveData<Boolean>
+
     suspend fun fetchRepoDetails(username : String, reponame : String)
 
 }

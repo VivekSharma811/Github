@@ -37,10 +37,11 @@ class RepoListAdapter(var repoList : ArrayList<GithubRepository>) : RecyclerView
     }
 
     override fun onItemClicked(v: View) {
-        val reponame = v.reponame.text.toString()
+        val repositoryName = v.reponame.text.toString()
         val action = UserFragmentDirections.actionUserRepoDetails()
-        action.reponame = reponame
-        action.username = "mojombo"
+        action.reponame = repositoryName
+        action.username = v.fullName.text.toString().substring(0, v.fullName.text.toString().length - repositoryName.length -1)
+        //action.username = "mojombo"
         Navigation.findNavController(v).navigate(action)
     }
 

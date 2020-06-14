@@ -1,6 +1,7 @@
 package com.lightstone.github.model.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.lightstone.github.model.db.dao.UserDao
 import com.lightstone.github.model.network.datasource.UserDataSource
 import com.lightstone.github.model.response.UserItem
@@ -18,7 +19,14 @@ class UserRepositoryImpl(
         userDataSource.userList.observeForever {
             persistFetchedData(it)
         }
+        userDataSource.error.observeForever {
+            _error.postValue(it)
+        }
     }
+
+    private val _error = MutableLiveData<Boolean>()
+    override val error: LiveData<Boolean>
+        get() = _error
 
     override suspend fun getUserList(): LiveData<List<UserItem>> {
         return withContext(Dispatchers.IO) {

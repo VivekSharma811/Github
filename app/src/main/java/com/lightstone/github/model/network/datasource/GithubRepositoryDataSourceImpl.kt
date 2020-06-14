@@ -1,20 +1,23 @@
 package com.lightstone.github.model.network.datasource
 
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.lightstone.github.model.network.GithubApiService
 import com.lightstone.github.model.response.GithubRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposables
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
 class GithubRepositoryDataSourceImpl(
     private val githubApiService: GithubApiService
 ) : GithubRepositoryDataSource {
+
+    private val _error = MutableLiveData<Boolean>()
+
+    override val error: LiveData<Boolean>
+        get() = _error
 
     private val _repoList = MutableLiveData<List<GithubRepository>>()
 
@@ -34,7 +37,8 @@ class GithubRepositoryDataSourceImpl(
                     }
 
                     override fun onError(e: Throwable) {
-                        Log.e("Error", e.localizedMessage)
+                        Log.e("Error", e.toString())
+                        _error.postValue(true)
                     }
 
                 })

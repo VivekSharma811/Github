@@ -14,9 +14,18 @@ class RepoDetailsRepositoryImpl(
     override val repo: LiveData<RepoDetails>
         get() = _repo
 
+    private val _error = MutableLiveData<Boolean>()
+
+    override val error: LiveData<Boolean>
+        get() = _error
+
     init {
         repoDetailsDataSource.repoDetails.observeForever {
             _repo.postValue(it)
+        }
+
+        repoDetailsDataSource.error.observeForever {
+            _error.postValue(it)
         }
     }
 

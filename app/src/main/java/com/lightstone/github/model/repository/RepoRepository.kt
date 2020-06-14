@@ -7,6 +7,8 @@ interface RepoRepository {
 
     val repo : LiveData<List<GithubRepository>>
 
+    val error : LiveData<Boolean>
+
     suspend fun getRepoList(username : String)
 
 }

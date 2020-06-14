@@ -15,6 +15,11 @@ class UserDataSourceImpl(
     private val githubApiService: GithubApiService
 ) : UserDataSource {
 
+    private val _error = MutableLiveData<Boolean>()
+
+    override val error : LiveData<Boolean>
+        get() = _error
+
     private val _userList = MutableLiveData<List<UserItem>>()
 
     override val userList: LiveData<List<UserItem>>
@@ -34,6 +39,7 @@ class UserDataSourceImpl(
 
                     override fun onError(e: Throwable) {
                         Log.e("Error", e.toString())
+                        _error.postValue(true)
                     }
 
                 })

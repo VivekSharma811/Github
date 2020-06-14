@@ -10,6 +10,11 @@ class DetailsViewModel(
     private val repoDetailsRepository: RepoDetailsRepository
 ) : ViewModel() {
 
+    private val _error = MutableLiveData<Boolean>()
+
+    val error : LiveData<Boolean>
+        get() = _error
+
     private val _repoDetails = MutableLiveData<RepoDetails>()
 
     val repoDetails : LiveData<RepoDetails>
@@ -18,6 +23,9 @@ class DetailsViewModel(
     init {
         repoDetailsRepository.repo.observeForever {
             _repoDetails.postValue(it)
+        }
+        repoDetailsRepository.error.observeForever {
+            _error.postValue(it)
         }
     }
 
